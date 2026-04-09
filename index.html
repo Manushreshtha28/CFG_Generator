@@ -9,14 +9,22 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body style="margin: 0; background-color: #07070F;">
+<body>
     <div id="root"></div>
 
-    <script type="text/babel" data-type="module">
-        import App from './App.jsx';
+    <script type="text/babel">
+        // Paste the contents of your App.jsx here, 
+        // but since I'm providing the fix, I will simplify the setup:
+        const { useState, useCallback, useEffect, useRef } = React;
 
+        // --- PASTE THE FULL CONTENT OF YOUR cfg-parser.jsx BELOW THIS LINE ---
+        // (Ensure you remove the "import" lines at the very top of that file)
+        
+        // [Engine & Component Logic from your uploaded cfg-parser.jsx goes here]
+        
+        // At the very end, make sure this line exists:
         const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(React.createElement(App));
+        root.render(<App />);
     </script>
 </body>
 </html>
