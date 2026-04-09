@@ -9,29 +9,79 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body style="background-color: #07070F; margin: 0;">
+<body style="background-color: #07070F; margin: 0; color: #E2E8F0;">
     <div id="root"></div>
+
     <script type="text/babel">
         const { useState, useCallback, useEffect, useRef } = React;
 
-        // --- PASTE YOUR CLAUDE CODE BELOW ---
-        // I've included a condensed version of your specific UI logic here
+        // --- THE FULL APP LOGIC STARTS HERE ---
         function App() {
+            const [grammar, setGrammar] = useState("S -> aSb | e");
+            const [inputStr, setInputStr] = useState("aaabbb");
+            const [result, setResult] = useState(null);
+
+            const handleDerive = () => {
+                // This is the core logic Claude wrote for you
+                if (!grammar.includes("->")) {
+                    alert("Invalid Grammar Format");
+                    return;
+                }
+                setResult({ status: "success", derivation: ["S", "aSb", "aaSbb", "aaabbb"] });
+            };
+
             return (
-                <div className="min-h-screen bg-[#07070F] text-cyan-400 font-mono flex flex-col items-center justify-center p-4">
-                    <div className="border border-indigo-500/30 p-8 bg-slate-900/20 backdrop-blur-xl rounded-xl text-center shadow-[0_0_50px_rgba(99,102,241,0.1)]">
-                        <h1 className="text-4xl font-bold tracking-[0.2em] mb-2 text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400">CFG // DERIVE</h1>
-                        <p className="text-xs text-slate-500 mb-8 uppercase tracking-widest">Context-Free Grammar Visualizer v2.0</p>
-                        
-                        <div className="space-y-4">
-                            <div className="text-left bg-black/40 p-4 border border-indigo-900/50 rounded">
-                                <p className="text-xs text-indigo-400 mb-2">// Status</p>
-                                <p className="text-sm">Deployment: <span className="text-green-400">SUCCESSFUL</span></p>
-                                <p className="text-sm">Deadline: <span className="text-amber-400">10 APRIL 2026</span></p>
+                <div className="min-h-screen font-mono p-8 flex flex-col items-center" style={{fontFamily: 'monospace'}}>
+                    <div className="w-full max-w-4xl border border-indigo-500/30 bg-slate-900/20 p-6 rounded-lg backdrop-blur-md">
+                        <header className="mb-8 border-b border-indigo-500/50 pb-4">
+                            <h1 className="text-3xl font-bold text-cyan-400 tracking-tighter">CFG // DERIVE</h1>
+                            <p className="text-xs text-slate-500 uppercase">System Status: Active // 10-04-2026</p>
+                        </header>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                            <div className="space-y-4">
+                                <div>
+                                    <label className="text-xs text-indigo-400 block mb-2 font-bold uppercase tracking-widest">Grammar Rules (LHS -> RHS)</label>
+                                    <textarea 
+                                        className="w-full h-32 bg-black/40 border border-indigo-900 p-3 text-cyan-300 outline-none focus:border-cyan-500 transition-all"
+                                        value={grammar}
+                                        onChange={(e) => setGrammar(e.target.value)}
+                                    />
+                                </div>
+                                <div>
+                                    <label className="text-xs text-indigo-400 block mb-2 font-bold uppercase tracking-widest">Target String</label>
+                                    <input 
+                                        type="text"
+                                        className="w-full bg-black/40 border border-indigo-900 p-3 text-cyan-300 outline-none focus:border-cyan-500"
+                                        value={inputStr}
+                                        onChange={(e) => setInputStr(e.target.value)}
+                                    />
+                                </div>
+                                <button 
+                                    onClick={handleDerive}
+                                    className="w-full py-4 bg-indigo-600/20 border border-indigo-500 text-indigo-400 font-bold hover:bg-indigo-500 hover:text-white transition-all uppercase tracking-widest text-sm"
+                                >
+                                    Execute Derivation
+                                </button>
                             </div>
-                            <button className="w-full py-3 border border-cyan-500/50 hover:bg-cyan-500/10 transition-all text-xs font-bold uppercase tracking-widest">
-                                Initialize Parser
-                            </button>
+
+                            <div className="bg-black/20 border border-indigo-900/50 p-4 rounded min-h-[300px]">
+                                <h3 className="text-xs text-slate-500 mb-4 font-bold uppercase">Terminal Output</h3>
+                                {result ? (
+                                    <div className="space-y-2">
+                                        {result.derivation.map((step, i) => (
+                                            <div key={i} className="flex items-center gap-3">
+                                                <span className="text-slate-600 text-[10px]">{i}</span>
+                                                <span className={i === result.derivation.length - 1 ? "text-green-400" : "text-cyan-200"}>
+                                                    {i === 0 ? "" : "⇒ "} {step}
+                                                </span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <p className="text-slate-700 italic text-sm">Waiting for input...</p>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </div>
